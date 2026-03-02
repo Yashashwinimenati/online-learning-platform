@@ -1,10 +1,13 @@
 const jwt = require('jsonwebtoken')
 
-const authenticateUser = (req, res, next) => {
+const protect = (req, res, next) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' })
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized'
+    })
   }
 
   const token = authHeader.split(' ')[1]
@@ -14,8 +17,11 @@ const authenticateUser = (req, res, next) => {
     req.user = decoded
     next()
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Invalid token' })
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token'
+    })
   }
 }
 
-module.exports = { authenticateUser }
+module.exports = protect
